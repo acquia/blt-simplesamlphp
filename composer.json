@@ -1,0 +1,29 @@
+{
+  "name": "acquia/blt-simplesamlphp",
+  "type":"composer-plugin",
+  "description": "SimpleSAMLPhp integration for Acquia BLT",
+  "license": "GPL-2.0+",
+  "authors":[
+    {
+      "name": "Acquia Engineering",
+      "homepage": "https://www.acquia.com",
+      "role": "Maintainer"
+    }
+  ],
+  "repositories": {
+    "drupal": {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    }
+  },
+  "require": {
+    "drupal/simplesamlphp_auth": "^3.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "Acquia\\BltSimplesamlphp\\": "./src/"
+    }
+  }
+}
