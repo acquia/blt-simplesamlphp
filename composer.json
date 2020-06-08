@@ -1,6 +1,5 @@
 {
   "name": "acquia/blt-simplesamlphp",
-  "type":"composer-plugin",
   "description": "SimpleSAMLPhp integration for Acquia BLT",
   "license": "GPL-2.0+",
   "authors":[
