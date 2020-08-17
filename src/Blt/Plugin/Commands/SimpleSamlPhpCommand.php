@@ -71,6 +71,20 @@ class SimpleSamlPhpCommand extends BltTasks {
   }
 
   /**
+   * Adds simplesamlphp_auth as a dependency.
+   *
+   * @throws \Acquia\Blt\Robo\Exceptions\BltException
+   */
+  protected function requireModule() {
+    $this->say('Adding SimpleSAMLphp Auth module as a dependency...');
+    $package_options = [
+      'package_name' => 'drupal/simplesamlphp_auth',
+      'package_version' => '^3.0',
+    ];
+    $this->invokeCommand('internal:composer:require', $package_options);
+  }
+
+  /**
    * Copies configuration templates from SimpleSamlPHP to the repo root.
    *
    * @throws \Acquia\Blt\Robo\Exceptions\BltException
