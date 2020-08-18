@@ -47,7 +47,7 @@ following tasks:
    Note:
        The ``source:build:simplesamlphp-config`` command is strictly for local
        use, and because the command overwrites vendor files, running the
-       command will make not make any changes that are visible to Git.
+       command will not make any changes that are visible to Git.
 
 SimpleSAMLphp should now be ready for testing in your local environment. When
 you are ready to test in an Acquia Cloud environment, commit your configuration

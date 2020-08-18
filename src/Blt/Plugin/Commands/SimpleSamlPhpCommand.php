@@ -18,7 +18,7 @@ class SimpleSamlPhpCommand extends BltTasks {
    *
    * @var string
    */
-  protected $bltRoot;
+  protected $pluginRoot;
 
   /**
    * Repo root.
@@ -47,7 +47,7 @@ class SimpleSamlPhpCommand extends BltTasks {
    * @hook init
    */
   public function initialize() {
-    $this->bltRoot = $this->getConfigValue('blt.root');
+    $this->pluginRoot = $this->getConfigValue('blt.root') . '/../blt-simplesamlphp';
     $this->repoRoot = $this->getConfigValue('repo.root');
     $this->deployDir = $this->getConfigValue('deploy.dir');
     $this->formatter = new FormatterHelper();
@@ -62,7 +62,6 @@ class SimpleSamlPhpCommand extends BltTasks {
    * @throws \Acquia\Blt\Robo\Exceptions\BltException
    */
   public function initializeSimpleSamlPhp() {
-    $this->requireModule();
     $this->initializeConfig();
     $this->setSimpleSamlPhpInstalled();
     $this->symlinkDocrootToLibDir();
@@ -82,7 +81,7 @@ class SimpleSamlPhpCommand extends BltTasks {
     $result = $this->taskFileSystemStack()
       ->copy("{$this->repoRoot}/vendor/simplesamlphp/simplesamlphp/config-templates/authsources.php", "${destinationDirectory}/authsources.php", TRUE)
       ->copy("{$this->repoRoot}/vendor/simplesamlphp/simplesamlphp/config-templates/config.php", "${destinationDirectory}/config.php", TRUE)
-      ->copy("{$this->bltRoot}/scripts/simplesamlphp/acquia_config.php", "${destinationDirectory}/acquia_config.php", TRUE)
+      ->copy("{$this->pluginRoot}/scripts/simplesamlphp/acquia_config.php", "${destinationDirectory}/acquia_config.php", TRUE)
       ->setVerbosityThreshold(VerbosityThresholdInterface::VERBOSITY_VERBOSE)
       ->run();
     if (!$result->wasSuccessful()) {
@@ -129,7 +128,7 @@ class SimpleSamlPhpCommand extends BltTasks {
     }
 
     $result = $this->taskFileSystemStack()
-      ->copy("{$this->bltRoot}/scripts/simplesamlphp/gitignore.txt", "{$this->deployDir}/vendor/simplesamlphp/simplesamlphp/.gitignore", TRUE)
+      ->copy("{$this->pluginRoot}/scripts/simplesamlphp/gitignore.txt", "{$this->deployDir}/vendor/simplesamlphp/simplesamlphp/.gitignore", TRUE)
       ->setVerbosityThreshold(VerbosityThresholdInterface::VERBOSITY_VERBOSE)
       ->run();
 
@@ -198,7 +197,7 @@ class SimpleSamlPhpCommand extends BltTasks {
     }
 
     $result = $this->taskFileSystemStack()
-      ->copy("{$this->bltRoot}/scripts/simplesamlphp/gitignore.txt", "{$this->repoRoot}/vendor/simplesamlphp/simplesamlphp/.gitignore", TRUE)
+      ->copy("{$this->pluginRoot}/scripts/simplesamlphp/gitignore.txt", "{$this->repoRoot}/vendor/simplesamlphp/simplesamlphp/.gitignore", TRUE)
       ->setVerbosityThreshold(VerbosityThresholdInterface::VERBOSITY_VERBOSE)
       ->run();
     if (!$result->wasSuccessful()) {
@@ -245,7 +244,7 @@ class SimpleSamlPhpCommand extends BltTasks {
    */
   protected function addHtaccessPatch() {
     $this->taskFilesystemStack()
-      ->copy($this->bltRoot . "/scripts/simplesamlphp/htaccess-saml.patch",
+      ->copy("{$this->pluginRoot}/scripts/simplesamlphp/htaccess-saml.patch",
         $this->repoRoot . "/patches/htaccess-saml.patch")
       ->run();
     $composer_json = json_decode(file_get_contents("{$this->repoRoot}/composer.json"));
