@@ -27,9 +27,6 @@ following tasks:
 
     Tasks completed by the initialization command include the following:
 
-    -  Adds the [simpleSAMLphp
-       Authentication](https://www.drupal.org/project/simplesamlphp_auth)
-       module as a project dependency in your ``composer.json`` file.
     -  Copies configuration files to
        ``${project.root}/simplesamlphp/config``.
     -  Adds a ``simplesamlphp`` property to the ``blt/blt.yml`` file, which
