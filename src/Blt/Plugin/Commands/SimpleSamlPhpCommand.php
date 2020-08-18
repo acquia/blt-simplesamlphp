@@ -62,7 +62,6 @@ class SimpleSamlPhpCommand extends BltTasks {
    * @throws \Acquia\Blt\Robo\Exceptions\BltException
    */
   public function initializeSimpleSamlPhp() {
-    $this->requireModule();
     $this->initializeConfig();
     $this->setSimpleSamlPhpInstalled();
     $this->symlinkDocrootToLibDir();
