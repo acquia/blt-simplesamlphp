@@ -94,14 +94,16 @@ elseif (getenv('AH_SITE_ENVIRONMENT')) {
   $config['baseurlpath'] = 'simplesaml/';
   // Setup basic file based logging.
   $config['logging.handler'] = 'file';
-  // on Acquia Cloud Next, the preferred location is /shared/logs
-  // on Acquia Cloud Classic, the preferred location is the same directory as ACQUIA_HOSTING_DRUPAL_LOG
-  $config['loggingdir'] = (file_exists('/shared/logs/'))?'/shared/logs/':dirname(getenv('ACQUIA_HOSTING_DRUPAL_LOG'));
+  // On Acquia Cloud Next, the preferred location is /shared/logs
+  // on Acquia Cloud Classic, the preferred location is the same directory as
+  // ACQUIA_HOSTING_DRUPAL_LOG.
+  $config['loggingdir'] = (file_exists('/shared/logs/')) ? '/shared/logs/' : dirname(getenv('ACQUIA_HOSTING_DRUPAL_LOG'));
   $config['logging.logfile'] = 'simplesamlphp-' . date('Ymd') . '.log';
   $creds_json = file_get_contents('/var/www/site-php/' . $ah_site_dir . '/creds.json');
-  $creds = json_decode($creds_json, true);
+  $creds = json_decode($creds_json, TRUE);
   $database = $creds['databases'][$_ENV['AH_SITE_GROUP']];
-  // On Acquia Cloud Classic, the current active database host is determined by a DNS lookup
+  // On Acquia Cloud Classic, the current active database host is determined
+  // by a DNS lookup.
   if (isset($database['db_cluster_id'])) {
     require_once "/usr/share/php/Net/DNS2_wrapper.php";
     try {
