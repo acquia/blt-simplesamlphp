@@ -92,18 +92,19 @@ elseif (getenv('AH_SITE_ENVIRONMENT')) {
   $config['certdir'] = '/mnt/www/html/' . $ah_site_dir . '/simplesamlphp/cert/';
   $config['metadatadir'] = '/mnt/www/html/' . $ah_site_dir . '/simplesamlphp/metadata';
   $config['baseurlpath'] = 'simplesaml/';
-  // Setup basic logging.
+  // Setup basic file based logging.
   $config['logging.handler'] = 'file';
-  // phpcs:ignore
-  $config['loggingdir'] = dirname(getenv('ACQUIA_HOSTING_DRUPAL_LOG'));
+  // On Acquia Cloud Next, the preferred location is /shared/logs
+  // on Acquia Cloud Classic, the preferred location is the same directory as
+  // ACQUIA_HOSTING_DRUPAL_LOG.
+  $config['loggingdir'] = (file_exists('/shared/logs/')) ? '/shared/logs/' : dirname(getenv('ACQUIA_HOSTING_DRUPAL_LOG'));
   $config['logging.logfile'] = 'simplesamlphp-' . date('Ymd') . '.log';
   $creds_json = file_get_contents('/var/www/site-php/' . $ah_site_dir . '/creds.json');
-  $databases = json_decode($creds_json, TRUE);
-  $creds = $databases['databases'][getenv('AH_SITE_GROUP')];
-  if (substr(getenv('AH_SITE_ENVIRONMENT'), 0, 3) === 'ode') {
-    $creds['host'] = key($creds['db_url_ha']);
-  }
-  else {
+  $creds = json_decode($creds_json, TRUE);
+  $database = $creds['databases'][$_ENV['AH_SITE_GROUP']];
+  // On Acquia Cloud Classic, the current active database host is determined
+  // by a DNS lookup.
+  if (isset($database['db_cluster_id'])) {
     require_once "/usr/share/php/Net/DNS2_wrapper.php";
     try {
       $resolver = new Net_DNS2_Resolver([
@@ -112,16 +113,16 @@ elseif (getenv('AH_SITE_ENVIRONMENT')) {
           'dns-master',
         ],
       ]);
-      $response = $resolver->query("cluster-{$creds['db_cluster_id']}.mysql", 'CNAME');
-      $creds['host'] = $response->answer[0]->cname;
+      $response = $resolver->query("cluster-{$database['db_cluster_id']}.mysql", 'CNAME');
+      $database['host'] = $response->answer[0]->cname;
     }
     catch (Net_DNS2_Exception $e) {
-      $creds['host'] = "";
+      Logger::warning('DNS entry not found');
     }
   }
   $config['store.type'] = 'sql';
-  $config['store.sql.dsn'] = sprintf('mysql:host=%s;port=%s;dbname=%s', $creds['host'], $creds['port'], $creds['name']);
-  $config['store.sql.username'] = $creds['user'];
-  $config['store.sql.password'] = $creds['pass'];
+  $config['store.sql.dsn'] = sprintf('mysql:host=%s;port=%s;dbname=%s', $database['host'], $database['port'], $database['name']);
+  $config['store.sql.username'] = $database['user'];
+  $config['store.sql.password'] = $database['pass'];
   $config['store.sql.prefix'] = 'simplesaml';
 }
