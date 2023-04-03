@@ -1,6 +1,12 @@
 Acquia BLT SimpleSAMLPhp
 ====
 
+## This project is no longer maintained
+
+Acquia recommends using the SAML Authentication module instead of SimpleSAMLphp. For more information see https://docs.acquia.com/site-factory/manage/sso
+
+## Overview
+
 This is an [Acquia BLT](https://github.com/acquia/blt) plugin providing integration with [SimpleSAMLPhp](https://www.drupal.org/project/simplesamlphp_auth).
 
 This plugin provides a set of commands in the `simplesamlphp` namespace that will initialize SimpleSAMLPhp integration using a set of template configuration files.
